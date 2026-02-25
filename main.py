@@ -2,66 +2,51 @@ import streamlit as st
 from datetime import date
 
 # 1. Page Branding
-st.set_page_config(page_title="Stay Up Kings", page_icon="👑", layout="centered")
-
-# Custom CSS for the "King" aesthetic (Dark/Gold/Clean)
-st.markdown("""
-    <style>
-    .main { background-color: #0e1117; }
-    h1, h2, h3 { color: #d4af37 !important; } /* Gold headers */
-    .stCheckbox { font-size: 20px; }
-    </style>
-    """, unsafe_allow_html=True)
+st.set_page_config(page_title="Stay Up Kings", page_icon="👑")
 
 st.title("👑 STAY UP KINGS")
 st.subheader("Action-Based Autonomy")
-st.write(f"**Date:** {date.today().strftime('%A, %B %d, %Y')}")
+st.write(f"**The Daily Standard:** {date.today().strftime('%A, %b %d')}")
 
-# 2. The Daily Scorecard (The "Work")
+# 2. The Daily Scorecard
 st.divider()
-st.header("The Daily Standard")
-
 col1, col2 = st.columns(2)
 
 with col1:
     phys = st.checkbox("Physical: 30m Movement")
-    stoic = st.checkbox("Stoic: Neutrality in Conflict")
+    stoic = st.checkbox("Stoic: Neutrality in Conflict") # <--- This is for the food situation.
 
 with col2:
     work = st.checkbox("Professional: 4h Deep Work")
     house = st.checkbox("Duty: Silent House Management")
 
-# Logic for the Progress Bar
+# Logic
 score = sum([phys, stoic, work, house])
-total = 4
-progress = score / total
+st.progress(score / 4)
 
-st.progress(progress)
-if score == total:
-    st.success("KING STATUS: Integrity Maintained.")
+if score == 4:
+    st.success("INTEGRITY MAINTAINED.")
     st.balloons()
-else:
-    st.info(f"Progress: {int(progress*100)}% — Finish the day.")
 
-# 3. The Mobility Fund (The "Bridge")
+# 3. NEW: The Victory Log
 st.divider()
-st.header("The Bridge to $1,000")
-st.write("Target: Independent Transportation & Mobility")
+st.header("🏆 Daily Victory Log")
+victory = st.text_area("What did you win today? (e.g., 'Stayed calm when disrespected', 'Finished code')")
 
-# This is a manual input for now to track your "Secret Savings"
-current_fund = st.number_input("Current Secret Fund ($)", min_value=0, value=0, step=10)
+if st.button("Log Victory"):
+    st.toast(f"Victory Recorded: {victory}")
+    st.info("Note: For now, this stays on screen until you refresh. We'll save it to a database next.")
+
+# 4. The Mobility Fund
+st.divider()
+st.header("🚀 Mobility Fund")
+current_fund = st.number_input("Secret Savings ($)", min_value=0, value=0, step=10)
 target = 1000
 
-if current_fund < target:
-    st.progress(current_fund / target)
-    st.write(f"Remaining: **${target - current_fund}** to Freedom.")
-else:
-    st.success("Target Met. Mobility Secured.")
+st.progress(min(current_fund / target, 1.0))
+st.write(f"**${target - current_fund}** remaining to freedom.")
 
-# 4. The "Scorecard" Motto
+# 5. Sidebar Creed
 st.sidebar.title("The King's Creed")
-st.sidebar.info("""
-1. No Performance for Praise.
-2. Silence is Strength.
-3. Action is the Only Metric.
-""")
+st.sidebar.warning("REACTION IS SUBMISSION. Stay neutral. Stay focused.")
+st.sidebar.info("1. No Performance for Praise.\n2. Silence is Strength.\n3. Action is the Only Metric.")
