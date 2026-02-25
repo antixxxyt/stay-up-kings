@@ -1,52 +1,51 @@
 import streamlit as st
 from datetime import date
 
-# 1. Page Branding
-st.set_page_config(page_title="Stay Up Kings", page_icon="👑")
+# 1. Branding & Persona
+st.set_page_config(page_title="Stay Up Kings", page_icon="🛡️")
 
-st.title("👑 STAY UP KINGS")
-st.subheader("Action-Based Autonomy")
-st.write(f"**The Daily Standard:** {date.today().strftime('%A, %b %d')}")
+st.title("🛡️ STAY UP KINGS")
+st.subheader("Orien: The Self-Sovereignty Protocol")
+st.write(f"**Current Deployment:** {date.today().strftime('%A, %B %d')}")
 
-# 2. The Daily Scorecard
+# 2. The Scorecard (The New Terminology)
 st.divider()
 col1, col2 = st.columns(2)
 
 with col1:
-    phys = st.checkbox("Physical: 30m Movement")
-    stoic = st.checkbox("Stoic: Neutrality in Conflict") # <--- This is for the food situation.
+    phys = st.checkbox("War Machine: 30m Physical Output")
+    stoic = st.checkbox("Emotional Fortress: Neutrality in Conflict")
 
 with col2:
-    work = st.checkbox("Professional: 4h Deep Work")
-    house = st.checkbox("Duty: Silent House Management")
+    work = st.checkbox("Economic Expansion: 4h High-Value Work")
+    house = st.checkbox("Domestic Sovereignty: Command of Environment")
 
 # Logic
 score = sum([phys, stoic, work, house])
 st.progress(score / 4)
 
 if score == 4:
-    st.success("INTEGRITY MAINTAINED.")
+    st.success("KING STATUS: Integrity Maintained. You are the Architect.")
     st.balloons()
 
-# 3. NEW: The Victory Log
+# 3. The Victory Log
 st.divider()
-st.header("🏆 Daily Victory Log")
-victory = st.text_area("What did you win today? (e.g., 'Stayed calm when disrespected', 'Finished code')")
+st.header("🏆 The Chronicle of Wins")
+victory = st.text_area("Record a moment of resilience or progress:")
 
-if st.button("Log Victory"):
-    st.toast(f"Victory Recorded: {victory}")
-    st.info("Note: For now, this stays on screen until you refresh. We'll save it to a database next.")
+if st.button("Log to Chronicle"):
+    st.toast("Victory recorded in current session.")
 
-# 4. The Mobility Fund
+# 4. The Freedom Fund (The Bridge)
 st.divider()
-st.header("🚀 Mobility Fund")
-current_fund = st.number_input("Secret Savings ($)", min_value=0, value=0, step=10)
-target = 1000
+st.header("💰 The Freedom Fund")
+st.write("Metric: Independent Mobility ($1,000 Target)")
+current_fund = st.number_input("Secret Reserves ($)", min_value=0, value=0, step=10)
 
-st.progress(min(current_fund / target, 1.0))
-st.write(f"**${target - current_fund}** remaining to freedom.")
+st.progress(min(current_fund / 1000, 1.0))
+st.write(f"**${1000 - current_fund}** until full mobility is restored.")
 
-# 5. Sidebar Creed
-st.sidebar.title("The King's Creed")
-st.sidebar.warning("REACTION IS SUBMISSION. Stay neutral. Stay focused.")
-st.sidebar.info("1. No Performance for Praise.\n2. Silence is Strength.\n3. Action is the Only Metric.")
+# 5. The Sidebar (The Creed)
+st.sidebar.title("The Standard")
+st.sidebar.warning("REACTION IS SUBMISSION.")
+st.sidebar.info("1. Detach from the feedback loop.\n2. Build in silence.\n3. Let the results speak.")
