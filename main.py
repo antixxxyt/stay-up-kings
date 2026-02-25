@@ -32,7 +32,6 @@ st.markdown("""
         margin-top: -5px;
         margin-bottom: 30px;
     }
-    /* Tech-Card Containers */
     .domain-container {
         background-color: rgba(0, 212, 255, 0.05);
         padding: 15px;
@@ -57,7 +56,7 @@ st.markdown("""
 st.markdown('<p class="main-title">THE ORIEN PROJECT</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">STAY UP KINGS // MISSION ACCOUNTABILITY</p>', unsafe_allow_html=True)
 
-# 4. The 4 Domains (With Integrated Input)
+# 4. The 4 Domains
 st.divider()
 st.subheader("I. ACTIVE MISSION DOMAINS")
 
@@ -67,33 +66,24 @@ with col1:
     st.markdown('<div class="domain-container">', unsafe_allow_html=True)
     phys_check = st.checkbox("01 // PHYSICAL")
     phys_text = st.text_input("Evidence:", key="p_text", placeholder="Activity details...")
-    if phys_check and phys_text:
-        st.caption(f"✅ Physical Data Logged: {phys_text}")
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="domain-container">', unsafe_allow_html=True)
     stoic_check = st.checkbox("02 // MENTAL")
     stoic_text = st.text_input("Evidence:", key="m_text", placeholder="Response details...")
-    if stoic_check and stoic_text:
-        st.caption(f"✅ Mental Data Logged: {stoic_text}")
     st.markdown('</div>', unsafe_allow_html=True)
 
 with col2:
     st.markdown('<div class="domain-container">', unsafe_allow_html=True)
     work_check = st.checkbox("03 // PROFESSIONAL")
     work_text = st.text_input("Evidence:", key="w_text", placeholder="Progress details...")
-    if work_check and work_text:
-        st.caption(f"✅ Pro Data Logged: {work_text}")
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="domain-container">', unsafe_allow_html=True)
     env_check = st.checkbox("04 // ENVIRONMENTAL")
     env_text = st.text_input("Evidence:", key="e_text", placeholder="Space details...")
-    if env_check and env_text:
-        st.caption(f"✅ Env Data Logged: {env_text}")
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Domain Progress Logic
 score = sum([phys_check, stoic_check, work_check, env_check])
 st.progress(score / 4 if score > 0 else 0.0)
 
@@ -106,19 +96,20 @@ fund_progress = min(current_savings / target, 1.0)
 st.progress(fund_progress)
 st.write(f"**RESERVE STATUS:** {int(fund_progress*100)}% TOWARD MOBILITY")
 
-# 6. THE CHRONICLE (Captain's Log Style)
+# 6. THE CHRONICLE
 st.divider()
 st.subheader("III. CAPTAIN'S LOG // MISSION SUMMARY")
-victory_entry = st.text_area("", placeholder="Consolidate mission notes for the Orien Archive...", key="log_area", label_visibility="collapsed")
+victory_entry = st.text_area("", placeholder="Consolidate mission notes...", key="log_area", label_visibility="collapsed")
 
 if st.button("INITIALIZE TRANSMISSION"):
     with st.status("Transmitting to Orien Archive..."):
-        time.sleep(1)
-        st.write("Securing local logs...")
         time.sleep(1)
         st.write("Verifying integrity...")
     st.success(f"**MISSION LOG SECURED:** {date.today()}")
     st.info(f"**DAILY TRANSMISSION:** {victory_entry}")
 
 # 7. Sidebar
-with
+with st.sidebar:
+    st.title("DIRECTIVES")
+    st.error("REACTION IS SUBMISSION.")
+    st.info("The Orien Protocol: Find your heading. Move in silence.")
