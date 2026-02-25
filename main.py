@@ -58,7 +58,7 @@ st.write(f"**LOG DATE:** {date.today()} // **AUTH:** SECURE")
 
 # 4. The 4 Domains
 st.divider()
-st.subheader("I. DAILY OPERATIONAL DOMAINS")
+st.subheader("I. // DAILY OPERATIONAL DOMAINS")
 col1, col2 = st.columns(2)
 with col1:
     phys = st.checkbox("01 // PHYSICAL")
@@ -72,7 +72,7 @@ st.progress(score / 4 if score > 0 else 0.0)
 
 # 5. THE MONEY TRACKER
 st.divider()
-st.subheader("II. MOBILITY FUND (RESERVES)")
+st.subheader("II. // MOBILITY FUND (RESERVES)")
 target = 1000
 current_savings = st.number_input("CREDITS ($)", min_value=0, value=0, step=10)
 fund_progress = min(current_savings / target, 1.0)
@@ -81,7 +81,7 @@ st.write(f"**STATUS:** {int(fund_progress*100)}% TOWARD MOBILITY")
 
 # 6. THE CHRONICLE (Captain's Log Style)
 st.divider()
-st.subheader("III. CAPTAIN'S LOG // MISSION DATA")
+st.subheader("III. // MISSION DATA")
 st.write("*Sub-space frequency open for daily transmission...*")
 
 victory_entry = st.text_area("", placeholder="Record mission notes for the Orien Archive...", key="log_area", label_visibility="collapsed")
