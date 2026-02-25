@@ -37,7 +37,7 @@ st.markdown("""
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     """, unsafe_allow_html=True)
 
-# 3. Header
+# 3. HUD Header
 st.title("🛰️ ORIEN // STAY UP")
 st.write(f"**STARDATE:** {date.today()} // **STATUS:** UNSTOPPABLE")
 
@@ -67,4 +67,13 @@ st.write(f"**RESERVES:** ${current_savings} / ${target}")
 # 6. THE LOG
 st.divider()
 st.header("📡 THE CHRONICLE")
-victory_entry = st.
+victory_entry = st.text_area("Daily Victory Log", placeholder="Record your win...", label_visibility="collapsed")
+if st.button("UPLOAD DATA"):
+    st.toast("Victory encrypted.")
+    st.info(f"Logged: {victory_entry}")
+
+# 7. Sidebar
+with st.sidebar:
+    st.title("DIRECTIVES")
+    st.error("REACTION IS SUBMISSION.")
+    st.info("Build in silence.")
