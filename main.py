@@ -1,86 +1,64 @@
 import streamlit as st
 from datetime import date
 
-# 1. Page Config & Custom Theme
-st.set_page_config(page_title="Stay Up Kings", page_icon="🛡️", layout="centered")
+# 1. Page Config
+st.set_page_config(page_title="Stay Up Kings", page_icon="🚀", layout="centered")
 
-# Custom CSS Injection
+# 2. Space-Tech CSS
 st.markdown("""
     <style>
-    /* Main background color */
+    /* Deep Space Background */
     .stApp {
-        background-color: #0e1117;
-        color: #e0e0e0;
+        background: radial-gradient(circle, #1b2735 0%, #090a0f 100%);
+        color: #00d4ff;
     }
-    /* Gold headers */
+    /* Neon Blue Tech Headers */
     h1, h2, h3 {
-        color: #d4af37 !important;
-        font-family: 'Courier New', Courier, monospace;
+        color: #00d4ff !important;
+        font-family: 'Share Tech Mono', monospace;
+        text-shadow: 0px 0px 10px rgba(0, 212, 255, 0.7);
         text-transform: uppercase;
-        letter-spacing: 2px;
+        letter-spacing: 3px;
     }
-    /* Customizing the checkboxes */
+    /* Tech-Card Checkboxes */
     .stCheckbox {
-        background-color: #1a1c23;
-        padding: 15px;
-        border-radius: 10px;
-        border: 1px solid #30363d;
-        margin-bottom: 10px;
+        background-color: rgba(0, 212, 255, 0.05);
+        padding: 20px;
+        border-radius: 5px;
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        transition: 0.3s;
     }
-    /* The Progress Bar color */
+    .stCheckbox:hover {
+        border: 1px solid #00d4ff;
+        background-color: rgba(0, 212, 255, 0.1);
+    }
+    /* Cyberpunk Progress Bar */
     .stProgress > div > div > div > div {
-        background-color: #d4af37;
+        background-image: linear-gradient(to right, #00d4ff , #005f73);
+    }
+    /* Input Fields */
+    .stTextArea textarea, .stNumberInput input {
+        background-color: #090a0f !important;
+        color: #00d4ff !important;
+        border: 1px solid #00d4ff !important;
     }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     """, unsafe_allow_html=True)
 
-# 2. Header Section
-st.title("🛡️ STAY UP KINGS")
-st.write(f"**PROTOCOL ACTIVE:** {date.today().strftime('%A, %B %d')}")
+# 3. HUD Header
+st.title("🛰️ ORIEN // STAY UP")
+st.write(f"**SYSTEM STATUS:** ONLINE // **STARDATE:** {date.today()}")
 
-# 3. The 4 Domains (Clean Grid)
+# 4. The 4 Domains (The Protocol)
 st.divider()
-st.subheader("Daily Domains")
+st.subheader("Mission Parameters")
 
 col1, col2 = st.columns(2)
 
 with col1:
-    phys = st.checkbox("01 // PHYSICAL")
-    stoic = st.checkbox("02 // MENTAL")
+    phys = st.checkbox("DATA_01 // PHYSICAL")
+    stoic = st.checkbox("DATA_02 // MENTAL")
 
 with col2:
-    work = st.checkbox("03 // PROFESSIONAL")
-    env = st.checkbox("04 // ENVIRONMENTAL")
-
-# Score Logic
-score = sum([phys, stoic, work, env])
-progress = score / 4
-st.progress(progress)
-
-if score == 4:
-    st.success("INTEGRITY MAINTAINED. ALL DOMAINS SECURED.")
-    st.balloons()
-
-# 4. The Freedom Fund
-st.divider()
-st.subheader("💰 FREEDOM FUND")
-target = 1000
-current = st.number_input("Reserves ($)", min_value=0, value=0, step=10)
-
-# Visual Progress for Fund
-fund_progress = min(current / target, 1.0)
-st.progress(fund_progress)
-st.write(f"STATUS: **${current} / ${target}**")
-
-# 5. The Chronicle
-st.divider()
-st.subheader("🏆 THE CHRONICLE")
-victory = st.text_area("", placeholder="Enter your victory for the record...", label_visibility="collapsed")
-if st.button("LOG ENTRY"):
-    st.toast("Victory cached in session memory.")
-
-# 6. Sidebar
-with st.sidebar:
-    st.title("THE STANDARD")
-    st.error("REACTION IS SUBMISSION.")
-    st.info("Build in silence. Let the work prove them wrong.")
+    work = st.checkbox("DATA_03 // PROFESSIONAL")
