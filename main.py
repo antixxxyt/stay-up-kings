@@ -38,7 +38,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # 3. HUD Header
-st.title("🛰️ ORIEN // STAY UP")
+st.title("🛰️ ORIEN // STAY UP KINGS")
 st.write(f"**STARDATE:** {date.today()} // **STATUS:** UNSTOPPABLE")
 
 # 4. The 4 Domains
