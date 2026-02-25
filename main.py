@@ -1,5 +1,6 @@
 import streamlit as st
 from datetime import date
+import time
 
 # 1. Page Config
 st.set_page_config(page_title="The Orien Project", page_icon="🧭", layout="centered")
@@ -43,6 +44,7 @@ st.markdown("""
     }
     input, textarea {
         color: #00d4ff !important;
+        background-color: #000000 !important;
     }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -77,13 +79,21 @@ fund_progress = min(current_savings / target, 1.0)
 st.progress(fund_progress)
 st.write(f"**STATUS:** {int(fund_progress*100)}% TOWARD MOBILITY")
 
-# 6. THE CHRONICLE
+# 6. THE CHRONICLE (Captain's Log Style)
 st.divider()
-st.subheader("III. THE CHRONICLE")
-victory_entry = st.text_area("", placeholder="Upload mission data...", key="log_area", label_visibility="collapsed")
-if st.button("EXECUTE UPLOAD"):
-    st.toast("Victory recorded.")
-    st.info(f"VERIFIED: {victory_entry}")
+st.subheader("III. CAPTAIN'S LOG // MISSION DATA")
+st.write("*Sub-space frequency open for daily transmission...*")
+
+victory_entry = st.text_area("", placeholder="Record mission notes for the Orien Archive...", key="log_area", label_visibility="collapsed")
+
+if st.button("INITIALIZE TRANSMISSION"):
+    with st.status("Transmitting to Orion Nebula..."):
+        time.sleep(1)
+        st.write("Encoding data...")
+        time.sleep(1)
+        st.write("Log Secured.")
+    st.toast("TRANSMISSION SUCCESSFUL")
+    st.info(f"**CAPTAIN'S LOG ENTRY:** {victory_entry}")
 
 # 7. Sidebar
 with st.sidebar:
