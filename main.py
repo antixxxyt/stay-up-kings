@@ -5,22 +5,20 @@ import time
 # 1. Page Config
 st.set_page_config(page_title="Orien", page_icon="🧭", layout="centered")
 
-# 2. Refined Tech CSS
+# 2. Clean Tech CSS (No Glow, High Contrast)
 st.markdown("""
     <style>
-    /* Deep Space Background */
     .stApp {
-        background: radial-gradient(circle, #0a1128 0%, #000000 100%);
+        background-color: #05070a;
         color: #e0e0e0;
     }
     
-    /* Subtle Outer Glow for Headers */
+    /* Sharp, Clean Title */
     .main-title {
         color: #ffffff !important;
         font-family: 'Share Tech Mono', monospace;
-        text-shadow: 0px 0px 8px rgba(0, 212, 255, 0.4);
         text-transform: uppercase;
-        letter-spacing: 5px;
+        letter-spacing: 4px;
         font-size: 2.5rem;
         text-align: center;
         margin-bottom: 0px;
@@ -31,32 +29,30 @@ st.markdown("""
         font-family: 'Share Tech Mono', monospace;
         text-transform: uppercase;
         letter-spacing: 2px;
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         text-align: center;
         margin-top: -5px;
         margin-bottom: 30px;
-        opacity: 0.8;
     }
 
-    /* Styled Containers for Domains */
+    /* Sharp Border Containers */
     [data-testid="stVerticalBlockBorderWrapper"] {
-        background-color: rgba(0, 212, 255, 0.03) !important;
-        border: 1px solid rgba(0, 212, 255, 0.15) !important;
-        padding: 12px !important;
-        border-radius: 6px !important;
-        box-shadow: 0px 0px 10px rgba(0, 212, 255, 0.05);
+        background-color: #0c1017 !important;
+        border: 1px solid #1f2937 !important;
+        padding: 15px !important;
+        border-radius: 4px !important;
     }
 
-    /* Input Fields */
+    /* Input Fields - Deep Black */
     input, textarea {
         color: #00d4ff !important;
-        background-color: rgba(0, 0, 0, 0.4) !important;
-        border: 1px solid rgba(0, 212, 255, 0.2) !important;
+        background-color: #000000 !important;
+        border: 1px solid #30363d !important;
     }
 
-    /* Progress Bar */
+    /* Progress Bar - Solid Cyan */
     .stProgress > div > div > div > div {
-        background-image: linear-gradient(to right, #00d4ff , #0077b6);
+        background-color: #00d4ff;
     }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -91,8 +87,4 @@ with col2:
 
 # Domain Progress Logic
 score = sum([phys_check, stoic_check, work_check, env_check])
-st.progress(score / 4 if score > 0 else 0.0)
-
-# 5. THE MONEY TRACKER
-st.divider()
-st
+st.progress(score /
