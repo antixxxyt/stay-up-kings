@@ -4,7 +4,7 @@ from datetime import date
 # 1. Page Config
 st.set_page_config(page_title="The Orien Project", page_icon="🧭", layout="centered")
 
-# 2. Space-Tech CSS (Refined Neon)
+# 2. Space-Tech CSS
 st.markdown("""
     <style>
     .stApp {
@@ -41,7 +41,6 @@ st.markdown("""
         background-image: linear-gradient(to right, #00d4ff , #0077b6);
         box-shadow: 0px 0px 8px #00d4ff;
     }
-    /* Input field text color fix */
     input, textarea {
         color: #00d4ff !important;
     }
@@ -67,7 +66,7 @@ with col2:
     env = st.checkbox("04 // ENVIRONMENTAL")
 
 score = sum([phys, stoic, work, env])
-st.progress(score / 4)
+st.progress(score / 4 if score > 0 else 0.0)
 
 # 5. THE MONEY TRACKER
 st.divider()
@@ -81,5 +80,13 @@ st.write(f"**STATUS:** {int(fund_progress*100)}% TOWARD MOBILITY")
 # 6. THE CHRONICLE
 st.divider()
 st.subheader("III. THE CHRONICLE")
-victory_entry = st.text_area("", placeholder="Upload mission data...", label_visibility="collapsed")
+victory_entry = st.text_area("", placeholder="Upload mission data...", key="log_area", label_visibility="collapsed")
 if st.button("EXECUTE UPLOAD"):
+    st.toast("Victory recorded.")
+    st.info(f"VERIFIED: {victory_entry}")
+
+# 7. Sidebar
+with st.sidebar:
+    st.title("DIRECTIVES")
+    st.error("REACTION IS SUBMISSION.")
+    st.info("The Orien Protocol: Find your heading. Move in silence.")
