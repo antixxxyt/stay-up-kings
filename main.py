@@ -82,7 +82,7 @@ st.write(f"**STATUS:** {int(fund_progress*100)}% TOWARD MOBILITY")
 # 6. THE CHRONICLE (Captain's Log Style)
 st.divider()
 st.subheader("III. // MISSION DATA")
-st.write("*Sub-space frequency open for daily transmission...*")
+st.write("*Record your daily transmission...*")
 
 victory_entry = st.text_area("", placeholder="Record mission notes for the Orien Archive...", key="log_area", label_visibility="collapsed")
 
