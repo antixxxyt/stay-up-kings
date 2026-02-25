@@ -11,7 +11,7 @@ st.markdown("""
     h1, h2, h3 { color: #d4af37 !important; } /* Gold headers */
     .stCheckbox { font-size: 20px; }
     </style>
-    """, unsafe_allow_id=True)
+    """, unsafe_allow_html=True)
 
 st.title("👑 STAY UP KINGS")
 st.subheader("Action-Based Autonomy")
