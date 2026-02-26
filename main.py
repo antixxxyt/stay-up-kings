@@ -49,30 +49,26 @@ with st.sidebar:
         st.warning("BRAIN OFFLINE")
     st.error("REACTION IS SUBMISSION.")
 
-# --- UPDATED AI ENGINE (Stable v1 Endpoint) ---
+# --- UNIVERSAL AI ENGINE ---
 def call_gemini_api(user_input, key):
     if not key:
         return "⚠️ **SYSTEM KEY REQUIRED.**"
     
-    # CHANGED: Switched from v1beta to v1 stable endpoint
-    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={key}"
+    # Try the most universal endpoint
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={key}"
     headers = {'Content-Type': 'application/json'}
     
-    prompt_context = f"""
-    You are the ORIEN PROJECT STRATEGIC ADVISOR. 
-    Analyze this situation: "{user_input}"
-    Provide:
-    1. STOIC MENTAL PROTOCOL (How to fix the mindset)
-    2. 3 TACTICAL ACTIONS (Immediate steps)
-    3. LEGACY DIRECTIVE (A specific historical warrior/philosophy quote for this exact situation)
-    Tone: Intense, supportive, surgical.
-    """
-    
+    prompt_context = f"You are the ORIEN PROJECT STRATEGIC ADVISOR. Analyze: {user_input}. Provide a Stoic Mental Protocol, 3 Tactical Actions, and a warrior quote."
     data = {"contents": [{"parts": [{"text": prompt_context}]}]}
     
     try:
         response = requests.post(url, headers=headers, json=data)
         
+        # If v1beta fails, try v1 automatically
+        if response.status_code == 404:
+            url_v1 = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={key}"
+            response = requests.post(url_v1, headers=headers, json=data)
+
         if response.status_code != 200:
             return f"❌ **API ERROR {response.status_code}:** {response.text}"
             
@@ -91,24 +87,24 @@ if page == "01 MISSION CONTROL":
     with col1:
         with st.container(border=True):
             p_c = st.checkbox("01 // PHYSICAL")
-            p_t = st.text_input("Evidence:", key="p_t")
+            p_t = st.text_input("Evidence:", key="p_t", placeholder="Logged action (e.g., 5am Gym)...")
         with st.container(border=True):
             m_c = st.checkbox("02 // MENTAL")
-            m_t = st.text_input("Evidence:", key="m_t")
+            m_t = st.text_input("Evidence:", key="m_t", placeholder="Logged response (e.g., Cold shower)...")
     with col2:
         with st.container(border=True):
             w_c = st.checkbox("03 // PROFESSIONAL")
-            w_t = st.text_input("Evidence:", key="w_t")
+            w_t = st.text_input("Evidence:", key="w_t", placeholder="Logged output (e.g., 4hrs Deep Work)...")
         with st.container(border=True):
             e_c = st.checkbox("04 // ENVIRONMENTAL")
-            e_t = st.text_input("Evidence:", key="e_t")
+            e_t = st.text_input("Evidence:", key="e_t", placeholder="Logged env (e.g., Cleaned Desk)...")
 
     score = sum([1 for c, t in [(p_c, p_t), (m_c, m_t), (w_c, w_t), (e_c, e_t)] if c and t.strip()])
     st.progress(score/4)
 
     st.divider()
     st.subheader("MOBILITY FUND")
-    fund = st.number_input("RESERVE_CREDITS ($)", min_value=0, step=1)
+    fund = st.number_input("RESERVE_CREDITS ($)", min_value=0, step=1, placeholder="Current Savings...")
 
     if st.button("EXECUTE SESSION UPLOAD"):
         st.success(f"SESSION LOGGED // {datetime.now().strftime('%H:%M:%S')}")
@@ -118,7 +114,7 @@ elif page == "02 TACTICAL ADVISORY":
     st.markdown('<p class="main-title">THE ORIEN PROJECT</p>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">STAY UP KINGS // TACTICAL_ADVISORY</p>', unsafe_allow_html=True)
     
-    event = st.text_area("DESCRIBE THE EVENT IN DETAIL:", height=150)
+    event = st.text_area("DESCRIBE THE EVENT IN DETAIL:", height=150, placeholder="E.g., Financial crisis, relationship friction, or internal resistance...")
 
     if st.button("RUN ORIEN PROTOCOL"):
         if event:
