@@ -1,5 +1,5 @@
 import streamlit as st
-from datetime import date
+from datetime import date, datetime
 
 # 1. Page Config
 st.set_page_config(page_title="The Orien Project", page_icon="🧭", layout="centered")
@@ -91,7 +91,7 @@ w_v = 1 if (work_check and work_text.strip()) else 0
 e_v = 1 if (env_check and env_text.strip()) else 0
 
 total_verified = sum([p_v, m_v, w_v, e_v])
-st.progress(total_verified / 4)
+st.progress(total_verified / 4 if total_verified > 0 else 0.0)
 
 # 5. MOBILITY FUND
 st.divider()
@@ -108,23 +108,24 @@ victory_entry = st.text_area("", placeholder="Consolidate session notes...", key
 
 # 7. INTEGRATED SUMMARY OUTPUT
 if st.button("EXECUTE SESSION UPLOAD"):
-    st.success(f"**SESSION LOGGED // {date.today()}**")
+    # Capture current device time
+    now = datetime.now().strftime("%H:%M:%S")
+    st.success(f"**SESSION LOGGED // {date.today()} // {now}**")
     
     # Building the Summary String
     summary = f"**DATA_ENTRY:**\n\n"
     
-    # Domain Summary
-    summary += "--- DOMAIN STATUS ---\n"
-    summary += f"01 PHYSICAL: {'VERIFIED' if p_v else 'INCOMPLETE'} ({phys_text if phys_text else 'N/A'})\n"
-    summary += f"02 MENTAL: {'VERIFIED' if m_v else 'INCOMPLETE'} ({stoic_text if stoic_text else 'N/A'})\n"
-    summary += f"03 PROFESSIONAL: {'VERIFIED' if w_v else 'INCOMPLETE'} ({work_text if work_text else 'N/A'})\n"
-    summary += f"04 ENVIRONMENTAL: {'VERIFIED' if e_v else 'INCOMPLETE'} ({env_text if env_text else 'N/A'})\n\n"
+    # System Domain Summary (Cleaned up formatting)
+    summary += "--- SYSTEM DOMAINS ---\n"
+    summary += f"• 01 PHYSICAL: {'[VERIFIED]' if p_v else '[INCOMPLETE]'} — {phys_text if phys_text else 'No data'}\n\n"
+    summary += f"• 02 MENTAL: {'[VERIFIED]' if m_v else '[INCOMPLETE]'} — {stoic_text if stoic_text else 'No data'}\n\n"
+    summary += f"• 03 PROFESSIONAL: {'[VERIFIED]' if w_v else '[INCOMPLETE]'} — {work_text if work_text else 'No data'}\n\n"
+    summary += f"• 04 ENVIRONMENTAL: {'[VERIFIED]' if e_v else '[INCOMPLETE]'} — {env_text if env_text else 'No data'}\n\n"
     
     # Finance Summary
-    added_funds = current_savings if current_savings > 0 else 0
     summary += "--- FINANCIAL STATUS ---\n"
-    summary += f"CREDITS ADDED: ${added_funds if added_funds > 0 else '0'}\n"
-    summary += f"CURRENT RESERVES: ${current_savings} / ${target}\n\n"
+    summary += f"CREDITS ADDED: ${current_savings if current_savings > 0 else '0'}\n"
+    summary += f"TOTAL RESERVES: ${current_savings} / ${target}\n\n"
     
     # Final Notes
     summary += "--- SESSION NOTES ---\n"
