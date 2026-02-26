@@ -41,37 +41,31 @@ with st.sidebar:
     st.title("SYSTEM MENU")
     page = st.radio("SELECT MODULE:", ["01 MISSION CONTROL", "02 TACTICAL ADVISORY"])
     st.divider()
-    
-    # API KEY INPUT
     gemini_key = st.text_input("ENTER GEMINI KEY:", type="password", placeholder="Paste API Key here...")
     
-    # STATUS LIGHTS
     if gemini_key:
         st.success("BRAIN CONNECTED")
     else:
         st.warning("BRAIN OFFLINE")
-        
     st.error("REACTION IS SUBMISSION.")
-    st.info("Orien: Control the variables. Own the outcome.")
 
-# --- THE AI ENGINE (Direct Web Request) ---
+# --- UPDATED AI ENGINE (Stable v1 Endpoint) ---
 def call_gemini_api(user_input, key):
     if not key:
-        return "⚠️ **SYSTEM KEY REQUIRED.** Please enter your Gemini API key in the sidebar."
+        return "⚠️ **SYSTEM KEY REQUIRED.**"
     
-    # Using the standard Gemini 1.5 Flash endpoint
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={key}"
+    # CHANGED: Switched from v1beta to v1 stable endpoint
+    url = f"https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key={key}"
     headers = {'Content-Type': 'application/json'}
     
-    # Precise instructions for the AI
     prompt_context = f"""
     You are the ORIEN PROJECT STRATEGIC ADVISOR. 
     Analyze this situation: "{user_input}"
     Provide:
     1. STOIC MENTAL PROTOCOL (How to fix the mindset)
-    2. 3 TACTICAL ACTIONS (Immediate physical/logistical steps)
-    3. LEGACY DIRECTIVE (A highly specific quote from a historical warrior or philosopher that fits this EXACT situation)
-    Format with bold headers. Use an intense, direct, and supportive tone.
+    2. 3 TACTICAL ACTIONS (Immediate steps)
+    3. LEGACY DIRECTIVE (A specific historical warrior/philosophy quote for this exact situation)
+    Tone: Intense, supportive, surgical.
     """
     
     data = {"contents": [{"parts": [{"text": prompt_context}]}]}
@@ -79,7 +73,6 @@ def call_gemini_api(user_input, key):
     try:
         response = requests.post(url, headers=headers, json=data)
         
-        # Check if the server actually answered
         if response.status_code != 200:
             return f"❌ **API ERROR {response.status_code}:** {response.text}"
             
@@ -98,26 +91,24 @@ if page == "01 MISSION CONTROL":
     with col1:
         with st.container(border=True):
             p_c = st.checkbox("01 // PHYSICAL")
-            p_t = st.text_input("Evidence:", key="p_t", placeholder="Action log...")
+            p_t = st.text_input("Evidence:", key="p_t")
         with st.container(border=True):
             m_c = st.checkbox("02 // MENTAL")
-            m_t = st.text_input("Evidence:", key="m_t", placeholder="Response log...")
+            m_t = st.text_input("Evidence:", key="m_t")
     with col2:
         with st.container(border=True):
             w_c = st.checkbox("03 // PROFESSIONAL")
-            w_t = st.text_input("Evidence:", key="w_t", placeholder="Output log...")
+            w_t = st.text_input("Evidence:", key="w_t")
         with st.container(border=True):
             e_c = st.checkbox("04 // ENVIRONMENTAL")
-            e_t = st.text_input("Evidence:", key="e_t", placeholder="Env log...")
+            e_t = st.text_input("Evidence:", key="e_t")
 
-    # Calculate Score
     score = sum([1 for c, t in [(p_c, p_t), (m_c, m_t), (w_c, w_t), (e_c, e_t)] if c and t.strip()])
     st.progress(score/4)
 
     st.divider()
     st.subheader("MOBILITY FUND")
     fund = st.number_input("RESERVE_CREDITS ($)", min_value=0, step=1)
-    st.progress(min(fund / 1000, 1.0)) # Visualizing $1k goal
 
     if st.button("EXECUTE SESSION UPLOAD"):
         st.success(f"SESSION LOGGED // {datetime.now().strftime('%H:%M:%S')}")
@@ -127,15 +118,14 @@ elif page == "02 TACTICAL ADVISORY":
     st.markdown('<p class="main-title">THE ORIEN PROJECT</p>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">STAY UP KINGS // TACTICAL_ADVISORY</p>', unsafe_allow_html=True)
     
-    event = st.text_area("DESCRIBE THE EVENT IN DETAIL:", height=150, placeholder="E.g., Dealing with friction at home, financial stress, or lack of discipline...")
+    event = st.text_area("DESCRIBE THE EVENT IN DETAIL:", height=150)
 
     if st.button("RUN ORIEN PROTOCOL"):
         if event:
             with st.status("Establishing Neural Link..."):
                 output = call_gemini_api(event, gemini_key)
-            
             st.markdown('<div class="advisor-output">', unsafe_allow_html=True)
             st.markdown(output)
             st.markdown('</div>', unsafe_allow_html=True)
         else:
-            st.warning("Data required for analysis. Please describe the situation.")
+            st.warning("Data required for analysis.")
