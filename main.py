@@ -5,7 +5,11 @@ import time
 # 1. PAGE CONFIGURATION
 st.set_page_config(page_title="The Orien Project", page_icon="🧭", layout="centered")
 
-# 2. ORIEN LUMINOUS STYLING (The Aesthetic is back)
+# Initialize Session Log if it doesn't exist
+if 'user_logs' not in st.session_state:
+    st.session_state.user_logs = []
+
+# 2. ORIEN LUMINOUS STYLING
 st.markdown("""
     <style>
     .stApp { background-color: #05070a; color: #e0e0e0; }
@@ -37,65 +41,20 @@ st.markdown("""
 # --- HARD-WIRED TACTICAL LOGIC ---
 def get_hardwired_advice(user_input):
     txt = user_input.lower()
-    
-    # Financial/Resource Crisis
     if any(w in txt for w in ["money", "broke", "job", "bills", "rent", "hungry"]):
-        return {
-            "title": "RESOURCE DEFICIT PROTOCOL",
-            "mental": "Panic is a luxury you cannot afford. Emotional thinking leads to poor math.",
-            "tactical": [
-                "Audit all accounts and list every liquid dollar.",
-                "Identify one high-value skill you can trade for immediate cash.",
-                "Cut non-survival overhead to zero until reserves are restored."
-            ],
-            "quote": "'Wealth consists not in having great possessions, but in having few wants.' — Epictetus"
-        }
-    
-    # Conflict/Relationship Friction
-    elif any(w in txt for w in ["wife", "girlfriend", "fight", "argument", "she", "he", "they"]):
-        return {
-            "title": "INTERPERSONAL FRAME MAINTENANCE",
-            "mental": "The objective is peace, not victory. Do not be the source of chaos.",
-            "tactical": [
-                "Go silent. Listen more than you speak for the next 60 minutes.",
-                "Remove your ego from the equation; assess the actual grievance.",
-                "Maintain your routine regardless of the emotional climate."
-            ],
-            "quote": "'The best revenge is to be unlike him who performed the injury.' — Marcus Aurelius"
-        }
-    
-    # Discipline/Lazy/Resistance
-    elif any(w in txt for w in ["lazy", "procrastinate", "tired", "motivation", "don't want to"]):
-        return {
-            "title": "NEURAL RESISTANCE OVERRIDE",
-            "mental": "Motivation is a feeling. Discipline is a command. Feelings are irrelevant to the mission.",
-            "tactical": [
-                "Commit to the first 5 minutes of the task immediately.",
-                "Remove your phone from your physical environment.",
-                "Execute one 'hard' physical act (pushups/cold water) to break the mental stall."
-            ],
-            "quote": "'At dawn, when you have trouble getting out of bed, tell yourself: I have to go to work—as a human being.' — Marcus Aurelius"
-        }
-
-    # Default Strategy
-    return {
-        "title": "GENERAL STRATEGIC ADAPTATION",
-        "mental": "Isolate the variables you control. Ignore the ones you don't.",
-        "tactical": [
-            "Write down the single most important next step.",
-            "Remove distractions and focus exclusively on that step.",
-            "Evaluate the outcome and pivot if necessary."
-        ],
-        "quote": "'The impediment to action advances action. What stands in the way becomes the way.' — Marcus Aurelius"
-    }
+        return {"title": "RESOURCE DEFICIT PROTOCOL", "mental": "Panic is a luxury you cannot afford.", "tactical": ["Audit all liquid dollars.", "Liquidate non-essential assets.", "Execute high-value tasks."], "quote": "'Wealth consists in having few wants.' — Epictetus"}
+    elif any(w in txt for w in ["wife", "girlfriend", "fight", "argument", "she"]):
+        return {"title": "INTERPERSONAL FRAME MAINTENANCE", "mental": "The objective is peace, not victory.", "tactical": ["Maintain silence.", "Detach from emotion.", "Execute your routine."], "quote": "'The best revenge is to be unlike him who performed the injury.' — Marcus Aurelius"}
+    elif any(w in txt for w in ["lazy", "tired", "motivation"]):
+        return {"title": "NEURAL RESISTANCE OVERRIDE", "mental": "Feelings are irrelevant to the mission.", "tactical": ["Commit to 5 minutes.", "Kill distractions.", "Physical shock (Cold water)."], "quote": "'What stands in the way becomes the way.' — Marcus Aurelius"}
+    return {"title": "GENERAL STRATEGIC ADAPTATION", "mental": "Control the variables. Own the outcome.", "tactical": ["Isolate the next step.", "Focus exclusively.", "Execute."], "quote": "'The soul is dyed with the color of its thoughts.' — Marcus Aurelius"}
 
 # 3. SIDEBAR
 with st.sidebar:
     st.title("SYSTEM MENU")
-    page = st.radio("SELECT MODULE:", ["01 MISSION CONTROL", "02 TACTICAL ADVISORY"])
+    page = st.radio("SELECT MODULE:", ["01 MISSION CONTROL", "02 TACTICAL ADVISORY", "03 SYSTEM LOGS"])
     st.divider()
     st.error("REACTION IS SUBMISSION.")
-    st.info("Orien: Control the variables. Own the outcome.")
 
 # --- PAGE 1: MISSION CONTROL ---
 if page == "01 MISSION CONTROL":
@@ -107,18 +66,19 @@ if page == "01 MISSION CONTROL":
     with col1:
         with st.container(border=True):
             p_c = st.checkbox("01 // PHYSICAL")
-            p_t = st.text_input("Evidence:", key="p_t", placeholder="Logged action (e.g., 5am Gym)...")
+            p_t = st.text_input("Evidence:", key="p_t", placeholder="Gym, Diet, Sleep...")
         with st.container(border=True):
             m_c = st.checkbox("02 // MENTAL")
-            m_t = st.text_input("Evidence:", key="m_t", placeholder="Logged response (e.g., Cold shower)...")
+            m_t = st.text_input("Evidence:", key="m_t", placeholder="Reading, Meditating...")
     with col2:
         with st.container(border=True):
             w_c = st.checkbox("03 // PROFESSIONAL")
-            w_t = st.text_input("Evidence:", key="w_t", placeholder="Logged output (e.g., Deep Work)...")
+            w_t = st.text_input("Evidence:", key="w_t", placeholder="Deep Work, Projects...")
         with st.container(border=True):
             e_c = st.checkbox("04 // ENVIRONMENTAL")
-            e_t = st.text_input("Evidence:", key="e_t", placeholder="Logged env (e.g., Cleaned Desk)...")
+            e_t = st.text_input("Evidence:", key="e_t", placeholder="Cleaning, Organizing...")
 
+    # Progress Calculation
     score = sum([1 for c, t in [(p_c, p_t), (m_c, m_t), (w_c, w_t), (e_c, e_t)] if c and t.strip()])
     st.progress(score/4)
 
@@ -127,7 +87,17 @@ if page == "01 MISSION CONTROL":
     fund = st.number_input("RESERVE_CREDITS ($)", min_value=0, step=1)
 
     if st.button("EXECUTE SESSION UPLOAD"):
-        st.success(f"SESSION LOGGED // {datetime.now().strftime('%H:%M:%S')}")
+        # This logs the data into the Session State
+        log_entry = {
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "physical": p_t if p_c else "N/A",
+            "mental": m_t if m_c else "N/A",
+            "work": w_t if w_c else "N/A",
+            "env": e_t if e_c else "N/A",
+            "credits": fund
+        }
+        st.session_state.user_logs.append(log_entry)
+        st.success("SESSION EXECUTED. DATA ANCHORED.")
 
 # --- PAGE 2: TACTICAL ADVISORY ---
 elif page == "02 TACTICAL ADVISORY":
@@ -138,10 +108,7 @@ elif page == "02 TACTICAL ADVISORY":
 
     if st.button("RUN ORIEN PROTOCOL"):
         if event:
-            with st.spinner("Deconstructing variables..."):
-                time.sleep(1) # Simulation of thought
-                advice = get_hardwired_advice(event)
-            
+            advice = get_hardwired_advice(event)
             st.markdown('<div class="advisor-output">', unsafe_allow_html=True)
             st.write(f"### 🛡️ {advice['title']}")
             st.write(f"**🧠 MENTAL:** {advice['mental']}")
@@ -150,5 +117,17 @@ elif page == "02 TACTICAL ADVISORY":
                 st.write(f"• {action}")
             st.markdown(f'<div class="quote-box">{advice["quote"]}</div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
-        else:
-            st.warning("Please provide data for analysis.")
+
+# --- PAGE 3: SYSTEM LOGS ---
+elif page == "03 SYSTEM LOGS":
+    st.markdown('<p class="main-title">THE ORIEN PROJECT</p>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-title">STAY UP KINGS // SYSTEM_LOGS</p>', unsafe_allow_html=True)
+    
+    if not st.session_state.user_logs:
+        st.info("No data logs found. Execute a session in Mission Control to start tracking.")
+    else:
+        for log in reversed(st.session_state.user_logs):
+            with st.container(border=True):
+                st.write(f"📅 **DATE:** {log['time']}")
+                st.write(f"💪 {log['physical']} | 🧠 {log['mental']} | 💼 {log['work']} | 🏠 {log['env']}")
+                st.write(f"💰 **CREDITS:** ${log['credits']}")
