@@ -73,4 +73,50 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # 3. Branding
-st.markdown('<p class="main-title">THE ORIEN PROJECT</
+st.markdown('<p class="main-title">THE ORIEN PROJECT</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub-title">STAY UP KINGS // SYSTEM_ACTIVE</p>', unsafe_allow_html=True)
+
+# 4. Domains
+st.subheader("SYSTEM DOMAINS")
+col1, col2 = st.columns(2)
+with col1:
+    with st.container(border=True):
+        phys_check = st.checkbox("01 // PHYSICAL")
+        phys_text = st.text_input("Evidence:", key="p_text", placeholder="Action log...", label_visibility="collapsed")
+    with st.container(border=True):
+        stoic_check = st.checkbox("02 // MENTAL")
+        stoic_text = st.text_input("Evidence:", key="m_text", placeholder="Response log...", label_visibility="collapsed")
+with col2:
+    with st.container(border=True):
+        work_check = st.checkbox("03 // PROFESSIONAL")
+        work_text = st.text_input("Evidence:", key="w_text", placeholder="Output log...", label_visibility="collapsed")
+    with st.container(border=True):
+        env_check = st.checkbox("04 // ENVIRONMENTAL")
+        env_text = st.text_input("Evidence:", key="e_text", placeholder="Env log...", label_visibility="collapsed")
+
+score = sum([phys_check, stoic_check, work_check, env_check])
+st.progress(score / 4 if score > 0 else 0.0)
+
+# 5. MOBILITY FUND
+st.divider()
+st.subheader("MOBILITY FUND")
+target = 1000
+current_savings = st.number_input("RESERVE_CREDITS ($)", min_value=0, value=0, step=10)
+fund_progress = min(current_savings / target, 1.0)
+st.progress(fund_progress)
+st.write(f"**STATUS:** {int(fund_progress*100)}% // **DELTA:** ${target - current_savings}")
+
+# 6. USER LOG
+st.divider()
+st.subheader("USER_LOG // SESSION_DATA")
+victory_entry = st.text_area("", placeholder="Consolidate session notes...", key="log_area", label_visibility="collapsed")
+
+if st.button("EXECUTE SESSION UPLOAD"):
+    st.success(f"**SESSION LOGGED // {date.today()}**")
+    st.info(f"**DATA_ENTRY:** {victory_entry}")
+
+# 7. Sidebar
+with st.sidebar:
+    st.title("DIRECTIVES")
+    st.error("REACTION IS SUBMISSION.")
+    st.info("Orien: Control the variables. Own the outcome.")
