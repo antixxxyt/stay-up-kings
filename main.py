@@ -57,6 +57,15 @@ st.markdown("""
         background-color: #00d4ff;
         box-shadow: 0px 0px 15px rgba(0, 212, 255, 0.6);
     }
+    /* Final Status Box */
+    .status-box {
+        border: 1px solid #00d4ff;
+        padding: 20px;
+        text-align: center;
+        border-radius: 4px;
+        background-color: rgba(0, 212, 255, 0.05);
+        margin-top: 20px;
+    }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     """, unsafe_allow_html=True)
@@ -111,6 +120,14 @@ victory_entry = st.text_area("", placeholder="Consolidate session notes...", key
 if st.button("EXECUTE SESSION UPLOAD"):
     now = datetime.now().strftime("%H:%M:%S")
     
+    with st.status("Syncing to Archive..."):
+        time.sleep(1.2)
+        st.write("Verifying integrity...")
+        time.sleep(0.8)
+
+    # Success Header
+    st.success(f"**SESSION LOGGED // {date.today()} // {now}**")
+    
     # Building the Summary String
     summary = f"### SESSION SUMMARY LOG\n"
     summary += f"**DATA_ENTRY:**\n\n"
@@ -128,22 +145,15 @@ if st.button("EXECUTE SESSION UPLOAD"):
     summary += "--- SESSION NOTES ---\n\n"
     summary += f"{victory_entry if victory_entry else 'No notes archived.'}"
     
-    # UI Interaction
-    with st.status("Syncing to Archive..."):
-        time.sleep(1)
-        st.write("Verifying integrity...")
-        time.sleep(1)
-        st.write("Heading confirmed.")
-
-    st.success(f"**SESSION LOGGED // {date.today()} // {now}**")
     st.info(summary)
     
-    # The "Cool" Completion Message
-    st.toast("MISSION ACCOMPLISHED. STANDING BY FOR NEXT CYCLE.")
-    st.balloons() if total_verified == 4 else None
-    st.markdown("### **STATUS: OPERATION COMPLETE.**")
-    st.write("---")
-    st.write("*Log closed. Move in silence.*")
+    # Custom "Cool" Completion Message
+    st.markdown(f"""
+        <div class="status-box">
+            <h2 style="color: #00d4ff; margin: 0; text-shadow: 0px 0px 10px rgba(0, 212, 255, 0.5);">MISSION COMPLETE</h2>
+            <p style="margin: 5px 0 0 0; letter-spacing: 2px;">STATUS: OPERATION SUCCESSFUL // HEADING SECURED</p>
+        </div>
+    """, unsafe_allow_html=True)
 
 # 8. Sidebar
 with st.sidebar:
