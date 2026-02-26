@@ -12,7 +12,6 @@ st.markdown("""
         color: #e0e0e0;
     }
     
-    /* THE ORIEN PROJECT - High Luminosity */
     .main-title {
         color: #ffffff !important;
         font-family: 'Share Tech Mono', monospace;
@@ -24,7 +23,6 @@ st.markdown("""
         text-shadow: 0px 0px 20px rgba(0, 212, 255, 1), 0px 0px 10px rgba(0, 212, 255, 0.8);
     }
     
-    /* Subtitles and Section Headers - Subtle Glow */
     .sub-title, h3, .stSubheader p {
         color: #00d4ff !important;
         font-family: 'Share Tech Mono', monospace;
@@ -32,13 +30,11 @@ st.markdown("""
         text-shadow: 0px 0px 8px rgba(0, 212, 255, 0.6) !important;
     }
 
-    /* Checkbox Labels and General Text - Subtle Glow */
     .stCheckbox label, p, span, .stMarkdown {
         color: #e0e0e0;
         text-shadow: 0px 0px 5px rgba(0, 212, 255, 0.4);
     }
 
-    /* Input Box Styling */
     [data-testid="stVerticalBlockBorderWrapper"] {
         background-color: #0c1017 !important;
         border: 1px solid rgba(0, 212, 255, 0.3) !important;
@@ -54,7 +50,6 @@ st.markdown("""
         text-shadow: 0px 0px 5px rgba(0, 212, 255, 0.5) !important;
     }
 
-    /* Button Glow */
     .stButton button {
         background-color: transparent !important;
         color: #00d4ff !important;
@@ -63,7 +58,6 @@ st.markdown("""
         box-shadow: 0px 0px 10px rgba(0, 212, 255, 0.2) !important;
     }
 
-    /* Progress Bar Glow */
     .stProgress > div > div > div > div {
         background-color: #00d4ff;
         box-shadow: 0px 0px 15px rgba(0, 212, 255, 0.6);
@@ -79,6 +73,7 @@ st.markdown('<p class="sub-title">STAY UP KINGS // SYSTEM_ACTIVE</p>', unsafe_al
 # 4. Domains
 st.subheader("SYSTEM DOMAINS")
 col1, col2 = st.columns(2)
+
 with col1:
     with st.container(border=True):
         phys_check = st.checkbox("01 // PHYSICAL")
@@ -94,8 +89,15 @@ with col2:
         env_check = st.checkbox("04 // ENVIRONMENTAL")
         env_text = st.text_input("Evidence:", key="e_text", placeholder="Env log...", label_visibility="collapsed")
 
-score = sum([phys_check, stoic_check, work_check, env_check])
-st.progress(score / 4 if score > 0 else 0.0)
+# VERIFIED PROGRESS LOGIC: Only count if checked AND text is not empty
+p_score = 1 if (phys_check and phys_text.strip()) else 0
+m_score = 1 if (stoic_check and stoic_text.strip()) else 0
+w_score = 1 if (work_check and work_text.strip()) else 0
+e_score = 1 if (env_check and env_text.strip()) else 0
+
+total_verified = sum([p_score, m_score, w_score, e_score])
+st.progress(total_verified / 4)
+st.write(f"*VERIFIED DOMAINS ACTIVE: {total_verified} / 4*")
 
 # 5. MOBILITY FUND
 st.divider()
