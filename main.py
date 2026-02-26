@@ -45,19 +45,21 @@ st.markdown("""
         border: 1px solid rgba(0, 212, 255, 0.2) !important;
         text-shadow: 0px 0px 5px rgba(0, 212, 255, 0.5) !important;
     }
-    .stButton button {
+    /* Buttons */
+    .stButton button, .stDownloadButton button {
         background-color: transparent !important;
         color: #00d4ff !important;
         border: 1px solid #00d4ff !important;
         text-shadow: 0px 0px 8px rgba(0, 212, 255, 0.8) !important;
         box-shadow: 0px 0px 10px rgba(0, 212, 255, 0.2) !important;
         width: 100%;
+        text-transform: uppercase;
+        font-family: 'Share Tech Mono', monospace;
     }
     .stProgress > div > div > div > div {
         background-color: #00d4ff;
         box-shadow: 0px 0px 15px rgba(0, 212, 255, 0.6);
     }
-    /* Final Status Box */
     .status-box {
         border: 1px solid #00d4ff;
         padding: 20px;
@@ -94,7 +96,7 @@ with col2:
         env_check = st.checkbox("04 // ENVIRONMENTAL")
         env_text = st.text_input("Evidence:", key="e_text", placeholder="Env log...", label_visibility="collapsed")
 
-# Logic for verified score
+# Logic
 p_v = 1 if (phys_check and phys_text.strip()) else 0
 m_v = 1 if (stoic_check and stoic_text.strip()) else 0
 w_v = 1 if (work_check and work_text.strip()) else 0
@@ -118,44 +120,49 @@ victory_entry = st.text_area("", placeholder="Consolidate session notes...", key
 
 # 7. INTEGRATED SUMMARY OUTPUT
 if st.button("EXECUTE SESSION UPLOAD"):
-    now = datetime.now().strftime("%H:%M:%S")
+    now_time = datetime.now().strftime("%H:%M:%S")
+    now_date = date.today().strftime("%Y-%m-%d")
     
     with st.status("Syncing to Archive..."):
-        time.sleep(1.2)
+        time.sleep(1)
         st.write("Verifying integrity...")
-        time.sleep(0.8)
+        time.sleep(0.5)
 
-    # Success Header
-    st.success(f"**SESSION LOGGED // {date.today()} // {now}**")
+    st.success(f"**SESSION LOGGED // {now_date} // {now_time}**")
     
-    # Building the Summary String
-    summary = f"### SESSION SUMMARY LOG\n"
-    summary += f"**DATA_ENTRY:**\n\n"
-    
-    summary += "--- SYSTEM DOMAINS ---\n\n"
-    summary += f"• 01 PHYSICAL: {'[VERIFIED]' if p_v else '[INCOMPLETE]'} — {phys_text if phys_text else 'No data'}\n\n"
-    summary += f"• 02 MENTAL: {'[VERIFIED]' if m_v else '[INCOMPLETE]'} — {stoic_text if stoic_text else 'No data'}\n\n"
-    summary += f"• 03 PROFESSIONAL: {'[VERIFIED]' if w_v else '[INCOMPLETE]'} — {work_text if work_text else 'No data'}\n\n"
-    summary += f"• 04 ENVIRONMENTAL: {'[VERIFIED]' if e_v else '[INCOMPLETE]'} — {env_text if env_text else 'No data'}\n\n"
-    
-    summary += "--- FINANCIAL STATUS ---\n\n"
+    # Building the Report
+    summary = f"THE ORIEN PROJECT - MISSION REPORT\n"
+    summary += f"TIMESTAMP: {now_date} | {now_time}\n"
+    summary += "="*30 + "\n\n"
+    summary += "--- SYSTEM DOMAINS ---\n"
+    summary += f"01 PHYSICAL: [{'VERIFIED' if p_v else 'INCOMPLETE'}] - {phys_text if phys_text else 'N/A'}\n"
+    summary += f"02 MENTAL: [{'VERIFIED' if m_v else 'INCOMPLETE'}] - {stoic_text if stoic_text else 'N/A'}\n"
+    summary += f"03 PROFESSIONAL: [{'VERIFIED' if w_v else 'INCOMPLETE'}] - {work_text if work_text else 'No Output'}\n"
+    summary += f"04 ENVIRONMENTAL: [{'VERIFIED' if e_v else 'INCOMPLETE'}] - {env_text if env_text else 'N/A'}\n\n"
+    summary += "--- FINANCIAL ---\n"
     summary += f"CREDITS ADDED: ${current_savings if current_savings > 0 else '0'}\n"
     summary += f"TOTAL RESERVES: ${current_savings} / ${target}\n\n"
-    
-    summary += "--- SESSION NOTES ---\n\n"
-    summary += f"{victory_entry if victory_entry else 'No notes archived.'}"
+    summary += "--- SESSION NOTES ---\n"
+    summary += f"{victory_entry if victory_entry else 'No notes archived.'}\n\n"
+    summary += "STATUS: OPERATION SUCCESSFUL // HEADING SECURED"
     
     st.info(summary)
-    
-    # Custom "Cool" Completion Message
+
+    # 8. THE DOWNLOAD BUTTON (Appears only after execution)
+    st.download_button(
+        label="📥 TRANSMIT LOG TO LOCAL STORAGE",
+        data=summary,
+        file_name=f"Orien_Log_{now_date}.txt",
+        mime="text/plain",
+    )
+
     st.markdown(f"""
         <div class="status-box">
             <h2 style="color: #00d4ff; margin: 0; text-shadow: 0px 0px 10px rgba(0, 212, 255, 0.5);">MISSION COMPLETE</h2>
-            <p style="margin: 5px 0 0 0; letter-spacing: 2px;">STATUS: OPERATION SUCCESSFUL // HEADING SECURED</p>
         </div>
     """, unsafe_allow_html=True)
 
-# 8. Sidebar
+# 9. Sidebar
 with st.sidebar:
     st.title("DIRECTIVES")
     st.error("REACTION IS SUBMISSION.")
