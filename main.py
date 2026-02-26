@@ -2,22 +2,69 @@ import streamlit as st
 from datetime import date
 
 # 1. Page Config
-st.set_page_config(page_title="Orien", page_icon="🧭", layout="centered")
+st.set_page_config(page_title="The Orien Project", page_icon="🧭", layout="centered")
 
-# 2. Clean Tech CSS
+# 2. Luminous Tech CSS
 st.markdown("""
     <style>
-    .stApp { background-color: #05070a; color: #e0e0e0; }
-    .main-title { color: #ffffff !important; font-family: 'Share Tech Mono', monospace; text-transform: uppercase; letter-spacing: 4px; font-size: 2.2rem; text-align: center; margin-bottom: 0px; }
-    .sub-title { color: #00d4ff; font-family: 'Share Tech Mono', monospace; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; text-align: center; margin-top: -5px; margin-bottom: 30px; }
-    [data-testid="stVerticalBlockBorderWrapper"] { background-color: #0c1017 !important; border: 1px solid #1f2937 !important; padding: 15px !important; border-radius: 4px !important; }
-    input, textarea { color: #00d4ff !important; background-color: #000000 !important; border: 1px solid #30363d !important; }
-    .stProgress > div > div > div > div { background-color: #00d4ff; }
+    .stApp {
+        background-color: #05070a;
+        color: #e0e0e0;
+    }
+    
+    /* Stronger luminosity for the main title */
+    .main-title {
+        color: #ffffff !important;
+        font-family: 'Share Tech Mono', monospace;
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        font-size: 2.2rem;
+        text-align: center;
+        margin-bottom: 0px;
+        text-shadow: 0px 0px 15px rgba(0, 212, 255, 0.8), 0px 0px 5px rgba(255, 255, 255, 0.5);
+    }
+    
+    .sub-title {
+        color: #00d4ff;
+        font-family: 'Share Tech Mono', monospace;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 0.8rem;
+        text-align: center;
+        margin-top: -5px;
+        margin-bottom: 30px;
+        text-shadow: 0px 0px 5px rgba(0, 212, 255, 0.4);
+    }
+
+    /* Subtle glow for all subheaders and labels */
+    h3, label, p, span {
+        text-shadow: 0px 0px 4px rgba(0, 212, 255, 0.2);
+    }
+
+    [data-testid="stVerticalBlockBorderWrapper"] {
+        background-color: #0c1017 !important;
+        border: 1px solid #1f2937 !important;
+        padding: 15px !important;
+        border-radius: 4px !important;
+    }
+
+    input, textarea {
+        color: #00d4ff !important;
+        background-color: #000000 !important;
+        border: 1px solid #30363d !important;
+        text-shadow: 0px 0px 3px rgba(0, 212, 255, 0.3);
+    }
+
+    .stProgress > div > div > div > div {
+        background-color: #00d4ff;
+        box-shadow: 0px 0px 10px rgba(0, 212, 255, 0.5);
+    }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     """, unsafe_allow_html=True)
 
-# 3. Branding
-st.markdown('<p class="main-title">ORIEN</p>', unsafe_allow_html=True)
+# 3. Branding (The Orien Project)
+st.markdown('<p class="main-title">THE ORIEN PROJECT</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub-title">STAY UP KINGS // SYSTEM_ACTIVE</p>', unsafe_allow_html=True)
 
 # 4. Domains
