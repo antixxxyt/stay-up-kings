@@ -40,6 +40,20 @@ st.markdown("""
     }
     .quote-box { font-style: italic; color: #999; border-top: 1px solid rgba(0, 212, 255, 0.2); padding-top: 15px; margin-top: 20px; }
     .status-box { border: 1px solid #00d4ff; padding: 20px; text-align: center; border-radius: 4px; background-color: rgba(0, 212, 255, 0.05); margin-top: 20px; }
+    
+    /* NEW: BLUE TECH REPORT STYLING */
+    .blue-report {
+        background-color: #000000;
+        border: 1px solid #00d4ff;
+        color: #00d4ff;
+        font-family: 'Share Tech Mono', monospace;
+        padding: 20px;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        text-shadow: 0px 0px 5px rgba(0, 212, 255, 0.5);
+        box-shadow: inset 0px 0px 10px rgba(0, 212, 255, 0.1);
+        margin-bottom: 20px;
+    }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     """, unsafe_allow_html=True)
@@ -94,7 +108,7 @@ if page == "01 MISSION CONTROL":
             time.sleep(1)
         st.success(f"**SESSION LOGGED // {now_d} // {now_t}**")
         
-        # --- NEW SCI-FI SINGLE-LINE FORMATTING ---
+        # Single-line Sci-Fi Formatting
         summary = f"--- ORIEN MISSION REPORT // {now_d} :: {now_t} ---\n"
         summary += f"SYS_PHYS :: {'[VERIFIED]' if (p_c and p_t) else '[INCOMPLETE]'} -- {p_t if p_t else 'NO_DATA'}\n"
         summary += f"SYS_MENT :: {'[VERIFIED]' if (m_c and m_t) else '[INCOMPLETE]'} -- {m_t if m_t else 'NO_DATA'}\n"
@@ -104,7 +118,9 @@ if page == "01 MISSION CONTROL":
         summary += f"NOTES_LOG :: {victory_entry if victory_entry else 'EMPTY'}\n"
         summary += "--- END_TRANSMISSION ---"
         
-        st.code(summary, language='text')
+        # DISPLAY AS GLOWING BLUE TERMINAL
+        st.markdown(f'<div class="blue-report">{summary}</div>', unsafe_allow_html=True)
+        
         st.download_button("📥 TRANSMIT LOG", data=summary, file_name=f"Orien_{now_d}.txt")
         st.markdown('<div class="status-box"><h2 style="color: #00d4ff; margin:0; letter-spacing:3px;">MISSION COMPLETE</h2></div>', unsafe_allow_html=True)
 
