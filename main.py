@@ -6,15 +6,10 @@ import random
 # 1. Page Config
 st.set_page_config(page_title="The Orien Project", page_icon="🧭", layout="centered")
 
-# 2. Luminous Tech CSS (SOLID BLACK UPDATE)
+# 2. Luminous Tech CSS
 st.markdown("""
     <style>
-    /* SOLID BLACK BACKGROUND */
-    .stApp, [data-testid="stSidebar"] { 
-        background-color: #000000 !important; 
-        color: #e0e0e0; 
-    }
-    
+    .stApp { background-color: #05070a; color: #e0e0e0; }
     .main-title { 
         color: #ffffff !important; font-family: 'Share Tech Mono', monospace; 
         text-transform: uppercase; letter-spacing: 5px; font-size: 2.8rem; text-align: center; 
@@ -46,6 +41,7 @@ st.markdown("""
     .quote-box { font-style: italic; color: #999; border-top: 1px solid rgba(0, 212, 255, 0.2); padding-top: 15px; margin-top: 20px; }
     .status-box { border: 1px solid #00d4ff; padding: 20px; text-align: center; border-radius: 4px; background-color: rgba(0, 212, 255, 0.05); margin-top: 20px; }
     
+    /* NEW: BLUE TECH REPORT STYLING */
     .blue-report {
         background-color: #000000;
         border: 1px solid #00d4ff;
@@ -64,8 +60,6 @@ st.markdown("""
 
 # 3. Sidebar Navigation
 with st.sidebar:
-    # Ensure the logo file is in the same directory as your app
-    st.image("ChatGPT Image Nov 25, 2025, 11_48_52 AM copy.jpg", use_container_width=True)
     st.title("SYSTEM MENU")
     page = st.radio("SELECT MODULE:", ["01 MISSION CONTROL", "02 TACTICAL ADVISORY"], key="nav_menu")
     st.divider()
@@ -114,6 +108,7 @@ if page == "01 MISSION CONTROL":
             time.sleep(1)
         st.success(f"**SESSION LOGGED // {now_d} // {now_t}**")
         
+        # Single-line Sci-Fi Formatting
         summary = f"--- ORIEN MISSION REPORT // {now_d} :: {now_t} ---\n"
         summary += f"SYS_PHYS :: {'[VERIFIED]' if (p_c and p_t) else '[INCOMPLETE]'} -- {p_t if p_t else 'NO_DATA'}\n"
         summary += f"SYS_MENT :: {'[VERIFIED]' if (m_c and m_t) else '[INCOMPLETE]'} -- {m_t if m_t else 'NO_DATA'}\n"
@@ -123,7 +118,9 @@ if page == "01 MISSION CONTROL":
         summary += f"NOTES_LOG :: {victory_entry if victory_entry else 'EMPTY'}\n"
         summary += "--- END_TRANSMISSION ---"
         
+        # DISPLAY AS GLOWING BLUE TERMINAL
         st.markdown(f'<div class="blue-report">{summary}</div>', unsafe_allow_html=True)
+        
         st.download_button("📥 TRANSMIT LOG", data=summary, file_name=f"Orien_{now_d}.txt")
         st.markdown('<div class="status-box"><h2 style="color: #00d4ff; margin:0; letter-spacing:3px;">MISSION COMPLETE</h2></div>', unsafe_allow_html=True)
 
