@@ -1,6 +1,7 @@
 import streamlit as st
 from datetime import date, datetime
 import time
+import random
 
 # 1. Page Config
 st.set_page_config(page_title="The Orien Project", page_icon="🧭", layout="centered")
@@ -74,6 +75,15 @@ st.markdown("""
         margin-top: 10px; 
         border-radius: 0 4px 4px 0;
     }
+    .quote-box { 
+        font-style: italic; 
+        color: #999; 
+        border-top: 1px solid rgba(0, 212, 255, 0.2); 
+        padding-top: 15px; 
+        margin-top: 20px; 
+        font-size: 0.95rem; 
+        line-height: 1.4;
+    }
     .status-box {
         border: 1px solid #00d4ff;
         padding: 20px;
@@ -94,12 +104,33 @@ with st.sidebar:
     st.error("REACTION IS SUBMISSION.")
     st.info("Orien: Control the variables. Own the outcome.")
 
+# --- QUOTE DATABASE ---
+quotes = {
+    "resource": [
+        "'Wealth consists not in having great possessions, but in having few wants.' — Epictetus",
+        "'The individual who says it is not possible should move out of the way of those doing it.' — Tricia Cunningham",
+        "'Empty pockets never held anyone back. Only empty heads and empty hearts can do that.' — Norman Vincent Peale",
+        "'Scarcity of resources is the mother of invention.' — Unknown"
+    ],
+    "interpersonal": [
+        "'The best revenge is to be unlike him who performed the injury.' — Marcus Aurelius",
+        "'You have power over your mind—not outside events. Realize this, and you will find strength.' — Marcus Aurelius",
+        "'Everything that irritates us about others can lead us to an understanding of ourselves.' — Carl Jung",
+        "'He who angers you, conquers you.' — Elizabeth Kenny"
+    ],
+    "discipline": [
+        "'Self-discipline is the bridge between goals and accomplishment.' — Jim Rohn",
+        "'The soul becomes dyed with the color of its thoughts.' — Marcus Aurelius",
+        "'You don't get better on the days you feel like it. You get better on the days you don't.' — David Goggins",
+        "'Discipline is choosing between what you want now and what you want most.' — Abraham Lincoln"
+    ]
+}
+
 # --- PAGE 1: MISSION CONTROL ---
 if page == "01 MISSION CONTROL":
     st.markdown('<p class="main-title">THE ORIEN PROJECT</p>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">STAY UP KINGS // MISSION_CONTROL</p>', unsafe_allow_html=True)
     
-    # 4. Domains
     st.subheader("SYSTEM DOMAINS")
     col1, col2 = st.columns(2)
     with col1:
@@ -117,7 +148,7 @@ if page == "01 MISSION CONTROL":
             env_check = st.checkbox("04 // ENVIRONMENTAL")
             env_text = st.text_input("Evidence:", key="e_text", placeholder="Env log...", label_visibility="collapsed")
 
-    # Verified Logic: Bar only moves if checked AND text is present
+    # Progress Calculation
     p_v = 1 if (phys_check and phys_text.strip()) else 0
     m_v = 1 if (stoic_check and stoic_text.strip()) else 0
     w_v = 1 if (work_check and work_text.strip()) else 0
@@ -125,19 +156,16 @@ if page == "01 MISSION CONTROL":
     total_verified = sum([p_v, m_v, w_v, e_v])
     st.progress(total_verified / 4 if total_verified > 0 else 0.0)
 
-    # 5. Mobility Fund
     st.divider()
     st.subheader("MOBILITY FUND")
     target = 1000
     current_savings = st.number_input("RESERVE_CREDITS ($)", min_value=0, value=0, step=1)
     st.progress(min(current_savings / target, 1.0))
 
-    # 6. User Log
     st.divider()
     st.subheader("USER_LOG // SESSION_DATA")
     victory_entry = st.text_area("", placeholder="Consolidate session notes...", key="log_area", label_visibility="collapsed")
 
-    # 7. Execute Report
     if st.button("EXECUTE SESSION UPLOAD"):
         now_t, now_d = datetime.now().strftime("%H:%M:%S"), date.today().strftime("%Y-%m-%d")
         with st.status("Syncing to Archive..."):
@@ -173,38 +201,46 @@ elif page == "02 TACTICAL ADVISORY":
             st.write("**STRATEGIC READOUT // MULTI-TIER PROTOCOL:**")
             txt = problem_input.lower()
 
-            # TIER 1: RESOURCE CRISIS (Food, Money, Survival)
+            # Logic Categories
             if any(w in txt for w in ["hungry", "food", "broke", "no money", "rent", "starving", "eat"]):
-                st.write("### 🧠 MENTAL PROTOCOL")
-                st.write("• **DIRECTIVE:** Emergency Resource Management. Panic is a luxury you cannot afford.")
-                st.write("• **FRAME:** This is a logistical deficit. Do not attach shame to a resource gap; attach action to the solution.")
-                
-                st.write("### 🛠️ TACTICAL PROTOCOL")
-                st.write("• **ACTION 01:** Identify local 'Zero-Cost' hubs. Search for community kitchens or food pantries immediately.")
-                st.write("• **ACTION 02:** Trade labor. Contact local businesses for 'day-labor' tasks that provide immediate meals or cash.")
-                st.write("• **ACTION 03:** Inventory liquidation. Sell one non-essential item today to bridge the 24-hour gap.")
-
-            # TIER 2: INTERPERSONAL (Relationship friction)
-            elif any(w in txt for w in ["wife", "partner", "petty", "she", "he", "argument", "fight"]):
-                st.write("### 🧠 MENTAL PROTOCOL")
-                st.write("• **DIRECTIVE:** Frame Maintenance. You are the observer, not the participant in the drama.")
-                st.write("• **FRAME:** Their behavior is an external weather pattern. You do not get angry at the rain; you find cover.")
-                
-                st.write("### 🛠️ TACTICAL PROTOCOL")
-                st.write("• **ACTION 01:** Physical Exit. Remove yourself from the environment of friction for 60 minutes.")
-                st.write("• **ACTION 02:** Monosyllabic Logistical Communication. Do not defend your position. Only discuss facts.")
-
-            # TIER 3: GENERAL CHALLENGE
+                cat, protocol = "resource", "RESOURCE CRISIS"
+                mental = "Emergency Resource Management. Panic is a luxury you cannot afford."
+                frame = "This is a logistical deficit. Do not attach shame to a resource gap; attach action to the solution."
+                tactical = [
+                    "Identify local 'Zero-Cost' hubs. Search for community kitchens or food pantries immediately.",
+                    "Trade labor. Contact local businesses for 'day-labor' tasks that provide immediate meals or cash.",
+                    "Inventory liquidation. Sell one non-essential item today to bridge the 24-hour gap."
+                ]
+            elif any(w in txt for w in ["wife", "partner", "petty", "she", "he", "argument", "fight", "kids"]):
+                cat, protocol = "interpersonal", "INTERPERSONAL FRICTION"
+                mental = "Frame Maintenance. You are the observer, not the participant in the drama."
+                frame = "Their behavior is an external weather pattern. You do not get angry at the rain; you find cover."
+                tactical = [
+                    "Physical Exit. Remove yourself from the environment of friction for at least 60 minutes.",
+                    "Monosyllabic Logistical Communication. Do not defend or explain. Only discuss objective facts.",
+                    "Internal Audit. Identify why your peace was dependent on their approval."
+                ]
             else:
-                st.write("### 🧠 MENTAL PROTOCOL")
-                st.write("• **DIRECTIVE:** Extreme Ownership.")
-                st.write("• **FRAME:** Is this a variable you control? If yes, solve it. If no, ignore it.")
-                
-                st.write("### 🛠️ TACTICAL PROTOCOL")
-                st.write("• **ACTION 01:** Re-engage the Mission Control. Complete one verified task immediately to prove autonomy.")
+                cat, protocol = "discipline", "UNCLASSIFIED CHALLENGE"
+                mental = "Extreme Ownership and Focus."
+                frame = "Is this a variable you control? If yes, solve it. If no, ignore it."
+                tactical = [
+                    "Re-engage Mission Control immediately. Complete one verified task to prove autonomy.",
+                    "Cortisol Flush. 20 minutes of high-intensity physical movement to reset the nervous system.",
+                    "Execute the next professional objective regardless of emotional state."
+                ]
+
+            # Output Formatting
+            st.write(f"### 🛡️ {protocol}")
+            st.write(f"**🧠 MENTAL:** {mental}")
+            st.write(f"**🖼️ FRAME:** {frame}")
+            st.write("**🛠️ TACTICAL ACTIONS:**")
+            for action in tactical:
+                st.write(f"• {action}")
             
-            st.write("\n---")
-            st.write("*STATUS: Heading Secured. Execute and report back.*")
+            # Wisdom Layer
+            selected_quote = random.choice(quotes[cat])
+            st.markdown(f'<div class="quote-box">{selected_quote}</div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
         else:
             st.warning("Data required for protocol analysis.")
