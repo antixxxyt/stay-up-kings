@@ -1,5 +1,6 @@
 import streamlit as st
 from datetime import date, datetime
+import time
 
 # 1. Page Config
 st.set_page_config(page_title="The Orien Project", page_icon="🧭", layout="centered")
@@ -109,29 +110,40 @@ victory_entry = st.text_area("", placeholder="Consolidate session notes...", key
 # 7. INTEGRATED SUMMARY OUTPUT
 if st.button("EXECUTE SESSION UPLOAD"):
     now = datetime.now().strftime("%H:%M:%S")
-    st.success(f"**SESSION LOGGED // {date.today()} // {now}**")
     
     # Building the Summary String
     summary = f"### SESSION SUMMARY LOG\n"
     summary += f"**DATA_ENTRY:**\n\n"
     
-    # System Domain Summary with line breaks for clarity
     summary += "--- SYSTEM DOMAINS ---\n\n"
     summary += f"• 01 PHYSICAL: {'[VERIFIED]' if p_v else '[INCOMPLETE]'} — {phys_text if phys_text else 'No data'}\n\n"
     summary += f"• 02 MENTAL: {'[VERIFIED]' if m_v else '[INCOMPLETE]'} — {stoic_text if stoic_text else 'No data'}\n\n"
     summary += f"• 03 PROFESSIONAL: {'[VERIFIED]' if w_v else '[INCOMPLETE]'} — {work_text if work_text else 'No data'}\n\n"
     summary += f"• 04 ENVIRONMENTAL: {'[VERIFIED]' if e_v else '[INCOMPLETE]'} — {env_text if env_text else 'No data'}\n\n"
     
-    # Finance Summary
     summary += "--- FINANCIAL STATUS ---\n\n"
     summary += f"CREDITS ADDED: ${current_savings if current_savings > 0 else '0'}\n"
     summary += f"TOTAL RESERVES: ${current_savings} / ${target}\n\n"
     
-    # Final Notes
     summary += "--- SESSION NOTES ---\n\n"
     summary += f"{victory_entry if victory_entry else 'No notes archived.'}"
     
+    # UI Interaction
+    with st.status("Syncing to Archive..."):
+        time.sleep(1)
+        st.write("Verifying integrity...")
+        time.sleep(1)
+        st.write("Heading confirmed.")
+
+    st.success(f"**SESSION LOGGED // {date.today()} // {now}**")
     st.info(summary)
+    
+    # The "Cool" Completion Message
+    st.toast("MISSION ACCOMPLISHED. STANDING BY FOR NEXT CYCLE.")
+    st.balloons() if total_verified == 4 else None
+    st.markdown("### **STATUS: OPERATION COMPLETE.**")
+    st.write("---")
+    st.write("*Log closed. Move in silence.*")
 
 # 8. Sidebar
 with st.sidebar:
