@@ -70,8 +70,9 @@ st.markdown("""
         border-left: 3px solid #ff4b4b; 
         padding-left: 20px; 
         background-color: rgba(255, 75, 75, 0.05); 
-        padding: 15px; 
+        padding: 20px; 
         margin-top: 10px; 
+        border-radius: 0 4px 4px 0;
     }
     .status-box {
         border: 1px solid #00d4ff;
@@ -116,7 +117,7 @@ if page == "01 MISSION CONTROL":
             env_check = st.checkbox("04 // ENVIRONMENTAL")
             env_text = st.text_input("Evidence:", key="e_text", placeholder="Env log...", label_visibility="collapsed")
 
-    # Verified Logic
+    # Verified Logic: Bar only moves if checked AND text is present
     p_v = 1 if (phys_check and phys_text.strip()) else 0
     m_v = 1 if (stoic_check and stoic_text.strip()) else 0
     w_v = 1 if (work_check and work_text.strip()) else 0
@@ -153,7 +154,7 @@ if page == "01 MISSION CONTROL":
         
         st.info(summary)
         st.download_button("📥 TRANSMIT LOG", data=summary, file_name=f"Orien_{now_d}.txt")
-        st.markdown('<div class="status-box"><h2 style="color: #00d4ff; margin:0;">MISSION COMPLETE</h2></div>', unsafe_allow_html=True)
+        st.markdown('<div class="status-box"><h2 style="color: #00d4ff; margin:0; letter-spacing:3px;">MISSION COMPLETE</h2></div>', unsafe_allow_html=True)
 
 # --- PAGE 2: TACTICAL ADVISORY ---
 elif page == "02 TACTICAL ADVISORY":
@@ -166,17 +167,44 @@ elif page == "02 TACTICAL ADVISORY":
     if st.button("RUN ORIEN PROTOCOL"):
         if problem_input:
             with st.status("Analyzing variables..."):
-                time.sleep(1.5)
+                time.sleep(1.2)
+            
             st.markdown('<div class="advisor-output">', unsafe_allow_html=True)
-            st.write("**STRATEGIC READOUT:**")
+            st.write("**STRATEGIC READOUT // MULTI-TIER PROTOCOL:**")
             txt = problem_input.lower()
-            if any(w in txt for w in ["wife", "partner", "petty", "she"]):
-                st.write("• **DIRECTIVE:** Reaction is Submission. Maintain total frame.")
-                st.write("• **ACTION:** Do not engage in the petty loop. Focus on your own output.")
-            elif any(w in txt for w in ["work", "boss", "money"]):
-                st.write("• **DIRECTIVE:** Anti-Fragility. High pressure creates diamonds.")
-                st.write("• **ACTION:** Document, detach, and out-work the problem.")
+
+            # TIER 1: RESOURCE CRISIS (Food, Money, Survival)
+            if any(w in txt for w in ["hungry", "food", "broke", "no money", "rent", "starving", "eat"]):
+                st.write("### 🧠 MENTAL PROTOCOL")
+                st.write("• **DIRECTIVE:** Emergency Resource Management. Panic is a luxury you cannot afford.")
+                st.write("• **FRAME:** This is a logistical deficit. Do not attach shame to a resource gap; attach action to the solution.")
+                
+                st.write("### 🛠️ TACTICAL PROTOCOL")
+                st.write("• **ACTION 01:** Identify local 'Zero-Cost' hubs. Search for community kitchens or food pantries immediately.")
+                st.write("• **ACTION 02:** Trade labor. Contact local businesses for 'day-labor' tasks that provide immediate meals or cash.")
+                st.write("• **ACTION 03:** Inventory liquidation. Sell one non-essential item today to bridge the 24-hour gap.")
+
+            # TIER 2: INTERPERSONAL (Relationship friction)
+            elif any(w in txt for w in ["wife", "partner", "petty", "she", "he", "argument", "fight"]):
+                st.write("### 🧠 MENTAL PROTOCOL")
+                st.write("• **DIRECTIVE:** Frame Maintenance. You are the observer, not the participant in the drama.")
+                st.write("• **FRAME:** Their behavior is an external weather pattern. You do not get angry at the rain; you find cover.")
+                
+                st.write("### 🛠️ TACTICAL PROTOCOL")
+                st.write("• **ACTION 01:** Physical Exit. Remove yourself from the environment of friction for 60 minutes.")
+                st.write("• **ACTION 02:** Monosyllabic Logistical Communication. Do not defend your position. Only discuss facts.")
+
+            # TIER 3: GENERAL CHALLENGE
             else:
-                st.write("• **DIRECTIVE:** Detach. Identify if you control the variable.")
-                st.write("• **ACTION:** If uncontrollable, it is irrelevant. Return to Mission Control.")
+                st.write("### 🧠 MENTAL PROTOCOL")
+                st.write("• **DIRECTIVE:** Extreme Ownership.")
+                st.write("• **FRAME:** Is this a variable you control? If yes, solve it. If no, ignore it.")
+                
+                st.write("### 🛠️ TACTICAL PROTOCOL")
+                st.write("• **ACTION 01:** Re-engage the Mission Control. Complete one verified task immediately to prove autonomy.")
+            
+            st.write("\n---")
+            st.write("*STATUS: Heading Secured. Execute and report back.*")
             st.markdown('</div>', unsafe_allow_html=True)
+        else:
+            st.warning("Data required for protocol analysis.")
