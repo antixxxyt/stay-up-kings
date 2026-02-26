@@ -6,7 +6,7 @@ import random
 # 1. Page Config
 st.set_page_config(page_title="The Orien Project", page_icon="🧭", layout="centered")
 
-# 2. Luminous Tech CSS (Fully Restored)
+# 2. Luminous Tech CSS
 st.markdown("""
     <style>
     .stApp { background-color: #05070a; color: #e0e0e0; }
@@ -44,7 +44,7 @@ st.markdown("""
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     """, unsafe_allow_html=True)
 
-# 3. Sidebar Navigation (Stable Choice)
+# 3. Sidebar Navigation
 with st.sidebar:
     st.title("SYSTEM MENU")
     page = st.radio("SELECT MODULE:", ["01 MISSION CONTROL", "02 TACTICAL ADVISORY"], key="nav_menu")
@@ -53,9 +53,9 @@ with st.sidebar:
 
 # --- QUOTE DATABASE ---
 quotes = {
-    "resource": ["'Wealth consists not in having great possessions, but in having few wants.' — Epictetus", "'Scarcity of resources is the mother of invention.' — Unknown"],
-    "interpersonal": ["'The best revenge is to be unlike him who performed the injury.' — Marcus Aurelius", "'He who angers you, conquers you.' — Elizabeth Kenny"],
-    "discipline": ["'Self-discipline is the bridge between goals and accomplishment.' — Jim Rohn", "'What stands in the way becomes the way.' — Marcus Aurelius"]
+    "resource": ["'Wealth consists not in having great possessions, but in having few wants.' — Epictetus"],
+    "interpersonal": ["'The best revenge is to be unlike him who performed the injury.' — Marcus Aurelius"],
+    "discipline": ["'What stands in the way becomes the way.' — Marcus Aurelius"]
 }
 
 # --- PAGE 1: MISSION CONTROL ---
@@ -81,11 +81,8 @@ if page == "01 MISSION CONTROL":
             e_t = st.text_input("Evidence:", key="e_text", placeholder="Env log...", label_visibility="collapsed")
 
     # Progress Calculation
-    p_v = 1 if (p_c and p_t.strip()) else 0
-    m_v = 1 if (m_c and m_t.strip()) else 0
-    w_v = 1 if (w_c and w_t.strip()) else 0
-    e_v = 1 if (e_c and e_t.strip()) else 0
-    st.progress(sum([p_v, m_v, w_v, e_v]) / 4)
+    total_verified = sum([1 for c, t in [(p_c, p_t), (m_c, m_t), (w_c, w_t), (e_c, e_t)] if c and t.strip()])
+    st.progress(total_verified / 4)
 
     st.divider()
     current_savings = st.number_input("RESERVE_CREDITS ($)", min_value=0, value=0, step=1)
@@ -97,12 +94,17 @@ if page == "01 MISSION CONTROL":
             time.sleep(1)
         st.success(f"**SESSION LOGGED // {now_d} // {now_t}**")
         
-        summary = f"THE ORIEN PROJECT - MISSION REPORT\nTIMESTAMP: {now_d} | {now_t}\n" + "="*30 + "\n\n"
-        summary += f"• PHYSICAL: {p_t if p_v else 'N/A'}\n• MENTAL: {m_t if m_v else 'N/A'}\n"
-        summary += f"• PROFESSIONAL: {w_t if w_v else 'N/A'}\n• ENV: {e_t if e_v else 'N/A'}\n"
-        summary += f"RESERVE: ${current_savings}\nNOTES: {victory_entry}"
+        # --- NEW SCI-FI SINGLE-LINE FORMATTING ---
+        summary = f"--- ORIEN MISSION REPORT // {now_d} :: {now_t} ---\n"
+        summary += f"SYS_PHYS :: {'[VERIFIED]' if (p_c and p_t) else '[INCOMPLETE]'} -- {p_t if p_t else 'NO_DATA'}\n"
+        summary += f"SYS_MENT :: {'[VERIFIED]' if (m_c and m_t) else '[INCOMPLETE]'} -- {m_t if m_t else 'NO_DATA'}\n"
+        summary += f"SYS_PROF :: {'[VERIFIED]' if (w_c and w_t) else '[INCOMPLETE]'} -- {w_t if w_t else 'NO_DATA'}\n"
+        summary += f"SYS_ENVR :: {'[VERIFIED]' if (e_c and e_t) else '[INCOMPLETE]'} -- {e_t if e_t else 'NO_DATA'}\n"
+        summary += f"FIN_RESV :: ${current_savings} USD\n"
+        summary += f"NOTES_LOG :: {victory_entry if victory_entry else 'EMPTY'}\n"
+        summary += "--- END_TRANSMISSION ---"
         
-        st.info(summary)
+        st.code(summary, language='text')
         st.download_button("📥 TRANSMIT LOG", data=summary, file_name=f"Orien_{now_d}.txt")
         st.markdown('<div class="status-box"><h2 style="color: #00d4ff; margin:0; letter-spacing:3px;">MISSION COMPLETE</h2></div>', unsafe_allow_html=True)
 
@@ -119,25 +121,23 @@ elif page == "02 TACTICAL ADVISORY":
                 time.sleep(1.2)
             
             st.markdown('<div class="advisor-output">', unsafe_allow_html=True)
-            st.write("**STRATEGIC READOUT // MULTI-TIER PROTOCOL:**")
             txt = problem_input.lower()
 
-            # Fully Restored Logic Branches
-            if any(w in txt for w in ["hungry", "food", "broke", "money", "rent", "eat"]):
+            if any(w in txt for w in ["broke", "money", "rent", "eat"]):
                 cat, protocol = "resource", "RESOURCE CRISIS"
                 mental = "Emergency Resource Management. Panic is a luxury you cannot afford."
-                frame = "This is a logistical deficit. Do not attach shame; attach action."
-                tactical = ["Identify local 'Zero-Cost' hubs.", "Trade labor for immediate meals/cash.", "Inventory liquidation."]
-            elif any(w in txt for w in ["wife", "she", "fight", "argument", "partner"]):
+                frame = "Logistical deficit identified. Attach action to the solution."
+                tactical = ["Identify 'Zero-Cost' hubs.", "Trade labor for immediate needs.", "Inventory liquidation."]
+            elif any(w in txt for w in ["wife", "she", "fight", "argument"]):
                 cat, protocol = "interpersonal", "INTERPERSONAL FRICTION"
-                mental = "Frame Maintenance. You are the observer, not the victim."
-                frame = "Their behavior is a weather pattern. You find cover; you don't fight the rain."
+                mental = "Frame Maintenance. You are the observer."
+                frame = "Behavior is an external weather pattern. Do not fight the rain."
                 tactical = ["Physical Exit (60 mins).", "Logistical communication only.", "Internal Audit."]
             else:
                 cat, protocol = "discipline", "UNCLASSIFIED CHALLENGE"
-                mental = "Extreme Ownership and Focus."
-                frame = "Variable check: Do you control this? If yes, solve. If no, ignore."
-                tactical = ["Re-engage Mission Control.", "20-min Cortisol Flush.", "Execute professional objective."]
+                mental = "Extreme Ownership."
+                frame = "Control check: If you control the variable, solve it. If not, ignore."
+                tactical = ["Re-engage Mission Control.", "20-min Cortisol Flush.", "Execute next objective."]
 
             st.write(f"### 🛡️ {protocol}")
             st.write(f"**🧠 MENTAL:** {mental}")
@@ -148,5 +148,3 @@ elif page == "02 TACTICAL ADVISORY":
             
             st.markdown(f'<div class="quote-box">{random.choice(quotes[cat])}</div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
-        else:
-            st.warning("Data required for analysis.")
