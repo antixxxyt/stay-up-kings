@@ -26,7 +26,7 @@ st.markdown("""
         padding: 15px !important; border-radius: 4px; 
     }
     input, textarea { color: #00d4ff !important; background-color: #000000 !important; border: 1px solid rgba(0, 212, 255, 0.2) !important; }
-    .stButton button, .stDownloadButton button { 
+    .stButton button { 
         background-color: transparent !important; color: #00d4ff !important; border: 1px solid #00d4ff !important; 
         width: 100%; text-transform: uppercase; font-family: 'Share Tech Mono', monospace; 
     }
@@ -36,40 +36,57 @@ st.markdown("""
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     """, unsafe_allow_html=True)
 
-# 3. SIDEBAR NAVIGATION & API SETUP
+# 3. SIDEBAR NAVIGATION
 with st.sidebar:
     st.title("SYSTEM MENU")
     page = st.radio("SELECT MODULE:", ["01 MISSION CONTROL", "02 TACTICAL ADVISORY"])
     st.divider()
-    gemini_key = st.text_input("ENTER GEMINI KEY:", type="password", help="Get your key at aistudio.google.com")
+    
+    # API KEY INPUT
+    gemini_key = st.text_input("ENTER GEMINI KEY:", type="password", placeholder="Paste API Key here...")
+    
+    # STATUS LIGHTS
+    if gemini_key:
+        st.success("BRAIN CONNECTED")
+    else:
+        st.warning("BRAIN OFFLINE")
+        
     st.error("REACTION IS SUBMISSION.")
     st.info("Orien: Control the variables. Own the outcome.")
 
 # --- THE AI ENGINE (Direct Web Request) ---
 def call_gemini_api(user_input, key):
     if not key:
-        return "⚠️ **SYSTEM KEY REQUIRED.** Please enter your Gemini API key in the sidebar to activate the AI brain."
+        return "⚠️ **SYSTEM KEY REQUIRED.** Please enter your Gemini API key in the sidebar."
     
+    # Using the standard Gemini 1.5 Flash endpoint
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={key}"
     headers = {'Content-Type': 'application/json'}
     
-    # Precise instructions for the AI behavior
+    # Precise instructions for the AI
     prompt_context = f"""
     You are the ORIEN PROJECT STRATEGIC ADVISOR. 
     Analyze this situation: "{user_input}"
-    Provide a Stoic Mental Protocol, 3 specific Tactical Actions, and a highly relevant warrior/philosophy quote.
-    Format your response clearly with bold headers and bullet points. Be surgical, practical, and intense.
+    Provide:
+    1. STOIC MENTAL PROTOCOL (How to fix the mindset)
+    2. 3 TACTICAL ACTIONS (Immediate physical/logistical steps)
+    3. LEGACY DIRECTIVE (A highly specific quote from a historical warrior or philosopher that fits this EXACT situation)
+    Format with bold headers. Use an intense, direct, and supportive tone.
     """
     
     data = {"contents": [{"parts": [{"text": prompt_context}]}]}
     
     try:
-        response = requests.post(url, headers=headers, data=json.dumps(data))
+        response = requests.post(url, headers=headers, json=data)
+        
+        # Check if the server actually answered
+        if response.status_code != 200:
+            return f"❌ **API ERROR {response.status_code}:** {response.text}"
+            
         response_data = response.json()
-        # Parsing the specific Gemini response structure
         return response_data['candidates'][0]['content']['parts'][0]['text']
     except Exception as e:
-        return f"**Connection Error:** Ensure your API key is correct and you have internet access. Details: {str(e)}"
+        return f"❌ **CONNECTION FAILURE:** {str(e)}"
 
 # --- PAGE 1: MISSION CONTROL ---
 if page == "01 MISSION CONTROL":
@@ -93,33 +110,32 @@ if page == "01 MISSION CONTROL":
             e_c = st.checkbox("04 // ENVIRONMENTAL")
             e_t = st.text_input("Evidence:", key="e_t", placeholder="Env log...")
 
-    # Verified Progress Logic
+    # Calculate Score
     score = sum([1 for c, t in [(p_c, p_t), (m_c, m_t), (w_c, w_t), (e_c, e_t)] if c and t.strip()])
     st.progress(score/4)
 
     st.divider()
     st.subheader("MOBILITY FUND")
-    fund = st.number_input("RESERVE_CREDITS ($)", min_value=0)
-    st.progress(min(fund / 1000, 1.0)) # Visualizing progress toward a $1k goal
+    fund = st.number_input("RESERVE_CREDITS ($)", min_value=0, step=1)
+    st.progress(min(fund / 1000, 1.0)) # Visualizing $1k goal
 
     if st.button("EXECUTE SESSION UPLOAD"):
-        now = datetime.now().strftime("%H:%M:%S")
-        st.success(f"SESSION LOGGED AT {now}. ALL SYSTEMS NOMINAL.")
+        st.success(f"SESSION LOGGED // {datetime.now().strftime('%H:%M:%S')}")
 
 # --- PAGE 2: TACTICAL ADVISORY ---
 elif page == "02 TACTICAL ADVISORY":
     st.markdown('<p class="main-title">THE ORIEN PROJECT</p>', unsafe_allow_html=True)
     st.markdown('<p class="sub-title">STAY UP KINGS // TACTICAL_ADVISORY</p>', unsafe_allow_html=True)
     
-    event = st.text_area("DESCRIBE THE EVENT IN DETAIL:", height=150, placeholder="Input crisis data for strategic readout...")
+    event = st.text_area("DESCRIBE THE EVENT IN DETAIL:", height=150, placeholder="E.g., Dealing with friction at home, financial stress, or lack of discipline...")
 
     if st.button("RUN ORIEN PROTOCOL"):
         if event:
-            with st.status("Accessing Gemini Intelligence Nodes..."):
+            with st.status("Establishing Neural Link..."):
                 output = call_gemini_api(event, gemini_key)
             
             st.markdown('<div class="advisor-output">', unsafe_allow_html=True)
             st.markdown(output)
             st.markdown('</div>', unsafe_allow_html=True)
         else:
-            st.warning("Data required for protocol analysis. Please describe the event.")
+            st.warning("Data required for analysis. Please describe the situation.")
